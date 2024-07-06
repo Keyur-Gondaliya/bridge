@@ -9,9 +9,16 @@ import {
 import { Box, Button, Typography } from "@mui/material";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { Suspense, useContext, useEffect, useState } from "react";
 
 export default function Home() {
+  return (
+    <Suspense>
+      <RealData />
+    </Suspense>
+  );
+}
+function RealData() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const context = useContext(ChainContext);
