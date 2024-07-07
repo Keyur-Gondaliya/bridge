@@ -18,3 +18,4 @@ export const DEFAULT_TO_TOKEN = {
     "https://assets.coingecko.com/coins/images/825/small/bnb-icon2_2x.png?1644979850",
 };
 export const DEFAULT_TO_BLOCKCHAIN_ID = 56;
+export const SLIPPAGE = "1";

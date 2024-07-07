@@ -1,11 +1,7 @@
 "use client";
 import { chains } from "@/constants/imageList";
-import {
-  Blockchain,
-  ChainContext,
-  CurrentChains,
-  Token,
-} from "@/utils/context/ChainContext";
+import { fetchRecommendedTokens, fetchSupportedChains } from "@/utils/api";
+import { ChainContext } from "@/utils/context/ChainContext";
 import { Box, Button, Typography } from "@mui/material";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -13,7 +9,7 @@ import { Suspense, useContext, useEffect, useState } from "react";
 
 export default function Home() {
   return (
-    <Suspense>
+    <Suspense fallback="Loading">
       <RealData />
     </Suspense>
   );
@@ -44,53 +40,42 @@ function RealData() {
   const [isBlockchianAllVisible, setIsBlockchianAllVisible] =
     useState<boolean>(false);
   useEffect(() => {
-    async function fetchSupportedChains() {
-      const url = "https://aggregator-api.xy.finance/v1/supportedChains";
-
-      try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        setBlockchainList(data.supportedChains);
-        return data;
-      } catch (error) {
-        console.error("Error fetching supported chains:", error);
-      }
-    }
     if (!((type === "input" || type === "output") && selectedChainId)) {
       router.push("/");
-    } else fetchSupportedChains();
+    } else {
+      const loadSupportedChains = async () => {
+        try {
+          const chains = await fetchSupportedChains();
+          setBlockchainList(chains.supportedChains);
+        } catch (error) {
+          console.error("Failed to load supported chains:", error);
+        }
+      };
+      loadSupportedChains();
+    }
   }, []);
 
   useEffect(() => {
-    async function fetchRecommendedTokens(chainId: string | null) {
-      if (!chainId) return; // Ensure chainId is valid before making the request
-      const url = `https://aggregator-api.xy.finance/v1/recommendedTokens?chainId=${chainId}`;
-
-      try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        if (data.success) {
-          setSelected(data.recommendedTokens);
-          setError("");
-        } else setError(data.errorMsg);
-        return data;
-      } catch (error) {
-        console.error("Error fetching recommended tokens:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
     if (!((type === "input" || type === "output") && selectedChainId)) {
       router.push("/");
     } else {
       setIsLoading(true);
-      fetchRecommendedTokens(selectedChainId);
+      const loadRecommendedTokens = async (chainId: string) => {
+        try {
+          const data = await fetchRecommendedTokens(chainId);
+          setSelected(data.recommendedTokens);
+          setError("");
+        } catch (error: any) {
+          setError(
+            (error && error.message) || "Failed to load recommended tokens:"
+          );
+
+          console.error("Failed to load recommended tokens:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      loadRecommendedTokens(selectedChainId);
     }
   }, [selectedChainId]);
 
