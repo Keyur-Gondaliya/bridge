@@ -1,6 +1,6 @@
 // utils/api.ts
 
-const API_BASE_URL = "http://localhost:3001/api"; // Replace with your actual API URL
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL; // Replace with your actual API URL
 
 interface SupportedChainsResponse {
   supportedChains: Array<{ chainId: string; name: string }>;
