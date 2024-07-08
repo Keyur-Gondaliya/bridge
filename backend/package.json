@@ -1,0 +1,53 @@
+{
+  "name": "bridge-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "start": "nodemon index.ts"
+  },
+  "author": "Keyur Gondaliya",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.5.1",
+    "bcrypt-nodejs": "^0.0.3",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "fs": "0.0.1-security",
+    "http": "^0.0.1-security",
+    "jest-mock-extended": "^3.0.7",
+    "jsonwebtoken": "^9.0.2",
+    "moment": "^2.29.4",
+    "mongoose": "^7.6.3",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.4",
+    "nodemailer": "^6.9.6",
+    "nodemon": "^3.0.1",
+    "path": "^0.12.7",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/bcrypt-nodejs": "^0.0.31",
+    "@types/cors": "^2.8.15",
+    "@types/express": "^4.17.20",
+    "@types/jest": "^29.5.12",
+    "@types/jsonwebtoken": "^9.0.4",
+    "@types/mongoose": "^5.11.97",
+    "@types/morgan": "^1.9.7",
+    "@types/multer": "^1.4.9",
+    "@types/node": "^20.8.7",
+    "@types/nodemailer": "^6.4.13",
+    "@types/supertest": "^6.0.2",
+    "i": "^0.3.7",
+    "jest": "^29.7.0",
+    "node-fetch": "^3.3.2",
+    "npm": "^10.2.1",
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.1.5",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  }
+}
