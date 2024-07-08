@@ -3,13 +3,14 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { SkeletonLoader } from "../common/SkeletonLoader";
 import { convertToDecimal } from "@/utils/supportFunctions";
+import { Quote } from "@/types/Home.types";
 
 type Props = {
   isLoading: boolean;
   currentChains: any;
-  quote: any;
+  activeQuote: Quote | null;
 };
-function ToBox({ isLoading, currentChains, quote }: Props) {
+function ToBox({ isLoading, currentChains, activeQuote }: Props) {
   const router = useRouter();
 
   return (
@@ -29,10 +30,10 @@ function ToBox({ isLoading, currentChains, quote }: Props) {
           <SkeletonLoader sx={{ width: "150px " }} />
         ) : (
           <Typography py="10px" fontSize="24px" color="#FFF" fontWeight={500}>
-            {quote.length > 0 && quote[0].dstQuoteTokenAmount
+            {activeQuote && activeQuote.dstQuoteTokenAmount
               ? convertToDecimal(
-                  quote[0].dstQuoteTokenAmount,
-                  quote[0].dstQuoteToken.decimals,
+                  activeQuote.dstQuoteTokenAmount,
+                  activeQuote.dstQuoteToken.decimals,
                   10
                 )
               : "0"}
@@ -43,8 +44,8 @@ function ToBox({ isLoading, currentChains, quote }: Props) {
         ) : (
           <Typography color="rgb(141,152,165)" fontSize="12px">
             ≈ ${" "}
-            {quote.length > 0 &&
-              Number(quote[0].dstQuoteTokenUsdValue).toFixed(2)}
+            {activeQuote &&
+              Number(activeQuote.dstQuoteTokenUsdValue).toFixed(2)}
           </Typography>
         )}
       </Box>
@@ -76,13 +77,19 @@ function ToBox({ isLoading, currentChains, quote }: Props) {
               alt={currentChains.to.token.name}
               height={28}
               width={28}
+              style={{ borderRadius: "100%" }}
             />
             <Image
               src={currentChains.to.blockchain.logo}
               alt={currentChains.to.blockchain.name}
               height={16}
               width={16}
-              style={{ position: "absolute", top: 16, left: 16 }}
+              style={{
+                position: "absolute",
+                top: 16,
+                left: 16,
+                borderRadius: "100%",
+              }}
             />
           </Box>
           <Box>

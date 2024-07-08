@@ -2,15 +2,21 @@ import { Box, TextField, Typography } from "@mui/material";
 import Image from "next/image";
 import { SkeletonLoader } from "../common/SkeletonLoader";
 import { useRouter } from "next/navigation";
+import { Quote } from "@/types/Home.types";
 
 type Props = {
   isLoading: boolean;
   currentChains: any;
-  quote: any;
+  activeQuote: Quote | null;
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-function FromBox({ isLoading, currentChains, quote, handleChange }: Props) {
+function FromBox({
+  isLoading,
+  currentChains,
+  activeQuote,
+  handleChange,
+}: Props) {
   const router = useRouter();
 
   return (
@@ -61,7 +67,7 @@ function FromBox({ isLoading, currentChains, quote, handleChange }: Props) {
           <SkeletonLoader sx={{ width: "150px " }} />
         ) : (
           <Typography color="rgb(141,152,165)" fontSize="12px">
-            ≈ $ {quote.length > 0 && quote[0].srcQuoteTokenUsdValue}
+            ≈ $ {activeQuote && activeQuote.srcQuoteTokenUsdValue}
           </Typography>
         )}
       </Box>
@@ -93,13 +99,19 @@ function FromBox({ isLoading, currentChains, quote, handleChange }: Props) {
               alt={currentChains.from.token.name}
               height={28}
               width={28}
+              style={{ borderRadius: "100%" }}
             />
             <Image
               src={currentChains.from.blockchain.logo}
               alt={currentChains.from.blockchain.name}
               height={16}
               width={16}
-              style={{ position: "absolute", top: 16, left: 16 }}
+              style={{
+                position: "absolute",
+                top: 16,
+                left: 16,
+                borderRadius: "100%",
+              }}
             />
           </Box>
           <Box>

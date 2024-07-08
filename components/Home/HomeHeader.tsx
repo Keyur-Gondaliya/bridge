@@ -31,7 +31,7 @@ function HomeHeader({ loadQuote, isLoading, amount }: Props) {
           cursor: isLoading ? "not-allowed" : "pointer",
           opacity: isLoading ? "0.6" : 1,
         }}
-        onClick={() => loadQuote(amount)}
+        onClick={() => amount && loadQuote(amount)}
       />
     </Box>
   );

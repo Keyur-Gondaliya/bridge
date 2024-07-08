@@ -19,6 +19,7 @@ import { useContext, useState } from "react";
 export default function Home() {
   const context = useContext<ChainContextProps | undefined>(ChainContext);
   const [quote, setQuote] = useState<Quote[]>([]);
+  const [activeQuote, setActiveQuote] = useState<Quote | null>(null);
   const [isParamsVisible, setIsParamsVisible] = useState(false);
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -42,6 +43,7 @@ export default function Home() {
       .then((data) => {
         if (data.success) {
           setQuote(data.routes);
+          setActiveQuote(data.routes[0]);
           setError("");
         } else {
           setError(data.errorMsg || "An error occurred");
@@ -101,23 +103,23 @@ export default function Home() {
             <FromBox
               isLoading={isLoading}
               currentChains={currentChains}
-              quote={quote}
+              activeQuote={activeQuote}
               handleChange={handleChange}
             />
             <ToBox
               isLoading={isLoading}
               currentChains={currentChains}
-              quote={quote}
+              activeQuote={activeQuote}
             />
             <Box display="flex" flexDirection="column" gap="10px" mt="6px">
               <KeyValueBox
                 isLoading={isLoading}
                 value={
-                  quote.length > 0
-                    ? `1 ${quote[0].srcQuoteToken.symbol} = ${(
-                        quote[0].dstQuoteTokenAmount /
-                        quote[0].srcQuoteTokenAmount
-                      ).toFixed(6)} ${quote[0].dstQuoteToken.symbol}`
+                  activeQuote
+                    ? `1 ${activeQuote.srcQuoteToken.symbol} = ${(
+                        activeQuote.dstQuoteTokenAmount /
+                        activeQuote.srcQuoteTokenAmount
+                      ).toFixed(6)} ${activeQuote.dstQuoteToken.symbol}`
                     : ""
                 }
                 quote={quote}
@@ -127,12 +129,12 @@ export default function Home() {
               <KeyValueBox
                 isLoading={isLoading}
                 value={
-                  quote.length > 0
+                  activeQuote
                     ? `${convertToDecimal(
-                        quote[0].bridgeDescription.bridgeFeeAmount,
-                        quote[0].bridgeDescription.bridgeFeeToken.decimals,
+                        activeQuote.bridgeDescription.bridgeFeeAmount,
+                        activeQuote.bridgeDescription.bridgeFeeToken.decimals,
                         6
-                      )} ${quote[0].bridgeDescription.bridgeFeeToken.symbol}`
+                      )} ${activeQuote.bridgeDescription.bridgeFeeToken.symbol}`
                     : ""
                 }
                 quote={quote}
@@ -143,7 +145,7 @@ export default function Home() {
               <KeyValueBox
                 isLoading={isLoading}
                 quote={quote}
-                value={quote.length > 0 ? quote[0].estimatedGas : ""}
+                value={activeQuote ? activeQuote.estimatedGas : ""}
                 name="Estimated gas"
                 key="3"
               />
@@ -152,7 +154,42 @@ export default function Home() {
               <Typography color="red">{error}</Typography>
             )}
           </Box>
+          {quote.length > 1 && (
+            <Box bgcolor="#00000066" p="10px" borderRadius="10px">
+              <Typography mb="10px">Suggested Rate : </Typography>
+              {quote.map((activeQuote, index) => (
+                <Box
+                  key={index}
+                  sx={{
+                    p: "4px",
 
+                    "&:hover": {
+                      bgcolor: "rgb(20,20,20)",
+                      cursor: "pointer",
+                      borderRadius: "4px",
+                    },
+                  }}
+                  onClick={() => {
+                    setActiveQuote(activeQuote);
+                  }}
+                >
+                  <KeyValueBox
+                    isLoading={isLoading}
+                    value={
+                      activeQuote
+                        ? `1 ${activeQuote.srcQuoteToken.symbol} = ${(
+                            activeQuote.dstQuoteTokenAmount /
+                            activeQuote.srcQuoteTokenAmount
+                          ).toFixed(6)} ${activeQuote.dstQuoteToken.symbol}`
+                        : ""
+                    }
+                    quote={quote}
+                    name="Exchange rate"
+                  />
+                </Box>
+              ))}
+            </Box>
+          )}
           <Button
             fullWidth
             variant="outlined"
